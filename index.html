@@ -1,0 +1,83 @@
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>magic_card</title>
+		<style>
+
+			#demo {
+				font-family: "Helvetica", Arial, sans-serif;
+			}
+			a {
+				text-decoration: none;
+				color: #f66;
+			}
+			li {
+				line-height: 1.5em;
+				margin-bottom: 20px;
+			}
+			.author,
+			.date {
+				font-weight: bold;
+			}
+		</style>
+	</head>
+    
+	<body>
+		<div id="demo">
+            <pre>
+
+                <li v-for="name in cards">
+                    
+                    <a v-bind:href="cards.imageUrl"><img v-bind:src="cards.imageUrl"/></a>  
+                    <span class="message">{{ cards.name }}</span><br />
+
+                  </li>
+            </pre>
+		</div>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://unpkg.com/vue@3"></script>
+		<script>
+			
+			const config = {
+				
+			};
+
+			Vue.createApp({
+				data() {
+					return {
+						cards: null,
+						apiURL: "https://api.magicthegathering.io/v1/cards/1"
+					};
+				},
+
+				created: function () {
+					this.fetchDataPromise()
+				},
+
+				watch: {
+					currentBranch: "fetchDataPromise"
+				},
+				methods: {
+					fetchDataPromise: function () {
+						axios
+							.get(this.apiURL)
+							.then((response) => {
+								this.cards = response.data.card
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
+					},
+					formattedMessage: function (message) {
+						const newline = message.indexOf("\n");
+						return newline > 0 ? message.slice(0, newline) : message;
+					},
+					formattedDate: function (date) {
+						return date.replace(/T|Z/g, " ");
+					},
+				},
+			}).mount("#demo");
+		</script>
+	</body>
+</html>
