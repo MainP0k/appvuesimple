@@ -25,17 +25,16 @@
     
 	<body>
 	<div id="demo">
-		<div id="Retrait-1">
-			<button v-on:click="CardIndex += 1">Suivant</button>
-		  </div>
-		<div id="Ajouts-1">
-			<button v-on:click="CardIndex += -1">Précédent</button>
-		</div>
+
 		<div v-if="cards.length > 0">
 			<a v-bind:href="cards[CardIndex].imageUrl"><img v-bind:src="cards[CardIndex].imageUrl"/></a><br />
 			<span class="message">{{ cards[CardIndex].name }}</span><br />
 		</div>
-
+		<div id="Navigation">
+			<button v-on:click="CardIndex += -1">Précédent</button>
+			<input v-model.number="CardIndex" />
+			<button v-on:click="CardIndex += 1">Suivant</button>
+		  </div>
 		<!-- <div v-for="card in cards">
 			<a v-bind:href="card.imageUrl"><img v-bind:src="card.imageUrl"/></a>
 			<span class="message">{{ card.name }}</span><br />
