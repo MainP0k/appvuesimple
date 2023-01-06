@@ -35,10 +35,11 @@
 			<input v-model.number="CardIndex" />
 			<button v-on:click="CardIndex += 1">Suivant</button>
 		  </div>
-		<!-- <div v-for="card in cards">
-			<a v-bind:href="card.imageUrl"><img v-bind:src="card.imageUrl"/></a>
-			<span class="message">{{ card.name }}</span><br />
-		</div> -->
+		<div id="Navigation">
+			<button v-on:click="currentPage += -1">Précédent</button>
+			<input v-model.number="currentPage" />
+			<button v-on:click="currentPage += 1">Suivant</button>
+		</div>
 	</div>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://unpkg.com/vue@3"></script>
@@ -49,11 +50,13 @@
 					return {
 						cards: null,
 						CardIndex : 0,
-						apiURL: "https://api.magicthegathering.io/v1/cards"
+						currentPage : 1,
+						apiURL: "https://api.magicthegathering.io/v1/cards?page=" 
 					};
 				},
 
-				created: function () {
+
+					created: function () {
 					this.fetchDataPromise()
 				},
 
@@ -63,20 +66,13 @@
 				methods: {
 					fetchDataPromise: function () {
 						axios
-							.get(this.apiURL)
+							.get(this.apiURL+ this.currentPage)
 							.then((response) => {
 								this.cards = response.data.cards.filter(c=>c.imageUrl != undefined)
 							})
 							.catch(function (error) {
 								console.log(error);
 							});
-					},
-					formattedMessage: function (message) {
-						const newline = message.indexOf("\n");
-						return newline > 0 ? message.slice(0, newline) : message;
-					},
-					formattedDate: function (date) {
-						return date.replace(/T|Z/g, " ");
 					},
 				},
 			}).mount("#demo");
